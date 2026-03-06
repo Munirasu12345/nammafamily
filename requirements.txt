@@ -1,3 +1,4 @@
 django
 gunicorn
-djangorestframework
+djangorestframework   # if you use DRF
+Pillow

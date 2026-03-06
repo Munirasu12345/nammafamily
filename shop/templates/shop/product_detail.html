@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ company_name }} - {{ product.name }}</title>
+    {% load static %}
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        body{font-family:Arial,Helvetica,sans-serif;margin:16px;color:#222}
+        .product{display:flex;gap:20px;flex-wrap:wrap}
+        .thumb{flex:0 0 320px}
+        .thumb img{width:100%;height:320px;object-fit:cover;border-radius:6px}
+        .meta{flex:1;min-width:260px}
+        .actions{display:flex;gap:12px;margin-top:16px}
+        .box-btn{background:#007bff;color:#fff;padding:12px 18px;border-radius:6px;text-decoration:none;display:inline-block}
+    </style>
+</head>
+<body>
+    <header class="banner" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:12px">
+            {% if company_logo_url %}
+                <img src="{{ company_logo_url }}" alt="{{ company_name }} logo" style="width:48px;height:48px;object-fit:cover;border-radius:50%">
+            {% else %}
+                <img src="{% static 'logo.svg' %}" alt="{{ company_name }} logo" style="width:48px;height:48px;object-fit:cover;border-radius:50%">
+            {% endif %}
+            <div style="font-weight:700">{{ company_name }}</div>
+        </div>
+        <div style="text-align:right;font-size:13px">
+            <div><a href="mailto:{{ company_email }}">{{ company_email }}</a></div>
+            <div><a href="tel:{{ company_phone }}">{{ company_phone }}</a></div>
+        </div>
+    </header>
+
+    <div class="product">
+        <div class="thumb">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <div style="width:100%;height:320px;background:#f2f2f2;display:flex;align-items:center;justify-content:center;color:#999">No Image</div>
+            {% endif %}
+        </div>
+        <div class="meta">
+            <h1>{{ product.name }}</h1>
+            <p>Original Price: <span style="text-decoration:line-through;color:#888">₹{{ product.original_price }}</span></p>
+            <p>Discount: {{ product.discount_percent }}%</p>
+            <p style="font-size:20px;font-weight:700">Final Price: ₹{{ product.final_price }}</p>
+            {% if product.free_shipping %}
+                <p>Free Shipping</p>
+            {% else %}
+                <p>Shipping: ₹{{ product.shipping_price }}</p>
+            {% endif %}
+            <p>{{ product.description }}</p>
+
+            <div class="actions">
+                <a class="box-btn" href="{% url 'add_to_cart' product.id %}">Add to Cart</a>
+                <a class="box-btn" style="background:#17a2b8" href="{% url 'home' %}">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

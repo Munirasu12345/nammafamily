@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.name }}</title>
+</head>
+<body>
+
+<h2>{{ product.name }}</h2>
+
+<img src="{{ product.image.url }}" width="300"><br><br>
+
+<p>
+    <del>₹{{ product.original_price }}</del><br>
+    <strong>₹{{ product.final_price }}</strong><br>
+    <p>{{ product.description }}</p>
+    {{ product.discount_percent }}% OFF
+</p>
+
+<a href="/">Back to Home</a>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Namma Family - Cart</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0;color:#222}
+        .banner{background:#f7c948;padding:18px 24px;display:flex;align-items:center;justify-content:space-between}
+        .container{padding:16px}
+        .cart-item{display:flex;gap:12px;border:1px solid #ececec;padding:12px;border-radius:6px;margin-bottom:12px;background:#fff}
+        .cart-item img{width:140px;height:120px;object-fit:cover;border-radius:4px}
+        .item-details{flex:1}
+        .qty-input{width:80px}
+        .actions{display:flex;gap:8px;align-items:center;margin-top:8px}
+        .remove{background:#dc3545;color:#fff;padding:6px 8px;border-radius:4px;text-decoration:none}
+        .whatsapp-order{display:block;width:100%;text-align:center;background:#25D366;color:#fff;padding:12px;border-radius:6px;text-decoration:none;font-weight:700}
+        .company{margin-top:16px;padding:12px;background:#fafafa;border:1px solid #eee;border-radius:6px}
+        .continue-btn{display:inline-block;background:#007bff;color:#fff;padding:10px 14px;border-radius:6px;text-decoration:none;font-weight:700}
+    </style>
+</head>
+<body>
+
+    <!-- Top company banner -->
+    {% load static %}
+    <header class="banner" style="display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:12px">
+            {% if company_logo_url %}
+                <img src="{{ company_logo_url }}" alt="{{ company_name }} logo" style="width:56px;height:56px;object-fit:cover;border-radius:50%;border:2px solid rgba(0,0,0,0.06)">
+            {% else %}
+                <img src="{% static 'logo.png' %}" alt="{{ company_name }} logo" style="width:56px;height:56px;object-fit:cover;border-radius:50%;border:2px solid rgba(0,0,0,0.06)">
+            {% endif %}
+            <div style="font-weight:700">{{ company_name }}</div>
+        </div>
+        <div style="text-align:right;font-size:13px">
+            <div><a href="mailto:{{ company_email }}">{{ company_email }}</a></div>
+            <div><a href="tel:{{ company_phone }}">{{ company_phone }}</a></div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Your Cart</h1>
+
+        {% if items %}
+            {% for item in items %}
+                <div class="cart-item">
+                    <div>
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                            <div style="width:140px;height:120px;background:#f2f2f2;display:flex;align-items:center;justify-content:center;color:#999">No Image</div>
+                        {% endif %}
+                    </div>
+                    <div class="item-details">
+                        <h3>{{ item.product.name }}</h3>
+                        <p style="margin:4px 0;color:#555">{{ item.product.short_description|default:item.product.description|truncatechars:120 }}</p>
+                        <p style="margin:4px 0">Price: <strong>₹{{ item.product.final_price }}</strong></p>
+
+                        <form method="post" action="{% url 'update_cart' item.product.id %}">
+                            {% csrf_token %}
+                            <label>Quantity: <input class="qty-input" type="number" name="quantity" value="{{ item.quantity }}" min="1"></label>
+                            <button type="submit">Update</button>
+                        </form>
+
+                        <div class="actions">
+                            <a class="remove" href="{% url 'remove_from_cart' item.product.id %}">Remove from cart</a>
+                        </div>
+                    </div>
+                    <!-- Consumer name field per item (optional) -->
+                    <div style="min-width:220px">
+                        <label>Consumer name</label>
+                        <input type="text" name="consumer_name_{{ item.product.id }}" placeholder="Enter name" style="width:100%;padding:8px;margin-top:6px;border:1px solid #ddd;border-radius:4px">
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div style="margin:12px 0;text-align:right"><strong>Total: ₹{{ total }}</strong></div>
+
+            <!-- Place order via WhatsApp -->
+            <a class="whatsapp-order" href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message|urlencode }}" target="_blank">Place order on WhatsApp</a>
+
+            <!-- Company contact removed as requested -->
+
+        {% else %}
+            <p>Cart is empty.</p>
+        {% endif %}
+
+        <!-- company details block removed as requested -->
+        <div style="margin-top:12px">
+            <a class="continue-btn" href="{% url 'home' %}">Continue Shopping</a>
+        </div>
+    </main>
+
+</body>
+</html>

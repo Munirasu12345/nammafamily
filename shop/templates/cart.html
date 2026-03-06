@@ -1,0 +1,69 @@
+<h1>Your Cart</h1>
+
+<style>
+.cart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cart-item {
+    display: flex;              /* LEFT → RIGHT */
+    align-items: center;
+    gap: 20px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.cart-image img {
+    width: 120px;
+    height: auto;
+    border-radius: 6px;
+}
+
+.cart-details h3 {
+    margin: 0;
+}
+</style>
+
+{% if cart_items %}
+<div class="cart-container">
+    {% for item in cart_items %}
+    <div class="cart-item">
+
+        <!-- PRODUCT IMAGE -->
+        <div class="cart-image">
+            {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+            {% else %}
+                <p>No Image</p>
+            {% endif %}
+        </div>
+
+        <!-- PRODUCT DETAILS -->
+        <div class="cart-details">
+            <h3>{{ item.product.name }}</h3>
+            <p>Price: ₹{{ item.product.price }}</p>
+
+            <form method="post" action="{% url 'update_cart' item.product.id %}">
+                {% csrf_token %}
+                <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
+                <button type="submit">Update</button>
+            </form>
+
+            <p><strong>Total:</strong> ₹{{ item.total_price }}</p>
+
+            <a href="{% url 'remove_from_cart' item.product.id %}">Remove</a>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+<h3>Total: ₹{{ total_price }}</h3>
+<a href="{% url 'checkout' %}">Proceed to Checkout</a>
+
+{% else %}
+<p>Your cart is empty</p>
+{% endif %}

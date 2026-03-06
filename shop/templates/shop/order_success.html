@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Namma Family - Order Success</title>
+</head>
+<body>
+    {% load shop_tags %}
+    <h1>Order Placed Successfully!</h1>
+    <p>Order ID: {{ order.id }}</p>
+    <p>Name: {{ order.customer_name }}</p>
+    <p>Phone: {{ order.phone }}</p>
+    <p>Address: {{ order.address }}</p>
+    <p>Total: ₹{{ order.total_amount }}</p>
+    <p>Payment: {{ order.payment_method }}</p>
+    <h2>Order Summary</h2>
+    {% for product_id, data in order.items.items %}
+        {% with quantity=data.quantity|default:data size=data.size|default:'' %}
+        {% with product_id_int=product_id %}
+            {% with product=product_id_int|get_product %}
+                {% if product %}
+                <div>
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
+                    {% endif %}
+                    <h3>{{ product.name }}</h3>
+                    {% if size %}
+                        <p>Size: {{ size }}</p>
+                    {% endif %}
+                    <p>Quantity: {{ quantity }}</p>
+                </div>
+                {% endif %}
+            {% endwith %}
+        {% endwith %}
+        {% endwith %}
+    {% endfor %}
+    {% if order.payment_method.name == 'sales_executive' %}
+        <h2>Contact Sales Executive</h2>
+        {% if order.payment_method.executive_name %}
+            <p>Executive: {{ order.payment_method.executive_name }}</p>
+        {% endif %}
+        <p>Please contact our sales executive for payment details.</p>
+        {% if order.payment_method.executive_whatsapp and order.payment_method.executive_whatsapp.strip %}
+            <a href="https://wa.me/{{ order.payment_method.executive_whatsapp }}?text=Hello, I placed order {{ order.id }}. Please assist with payment." target="_blank">Contact via WhatsApp</a>
+        {% endif %}
+        {% if order.payment_method.whatsapp_group_link and order.payment_method.whatsapp_group_link.strip %}
+            <p>Join our WhatsApp group: <a href="{{ order.payment_method.whatsapp_group_link }}" target="_blank">Click here</a></p>
+        {% endif %}
+    {% endif %}
+    {% if order.status == 'paid' %}
+        <h2>Order Tracking</h2>
+        <p>Status: {{ order.get_status_display }}</p>
+        {% if order.tracking_number %}
+            <p>Tracking Number: {{ order.tracking_number }}</p>
+        {% endif %}
+        {% if order.delivery_date %}
+            <p>Expected Delivery: {{ order.delivery_date }}</p>
+        {% endif %}
+        <div style="margin-top: 20px;">
+            <img src="https://via.placeholder.com/200x100?text=Delivery+Image" alt="Delivery" width="200">
+            <h3>Order Placed Successfully</h3>
+            <div style="border-left: 2px dotted #000; padding-left: 10px; margin-left: 50px;">
+                <p>✓ Order Placed</p>
+                {% if order.status in 'paid,shipped,delivered' %}
+                    <p>✓ Packing</p>
+                {% endif %}
+                {% if order.status in 'shipped,delivered' %}
+                    <p>✓ Shipping</p>
+                {% endif %}
+                {% if order.status == 'delivered' %}
+                    <p>✓ Delivered</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>

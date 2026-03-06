@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Namma Family - Payment</title>
+    <script>
+        let timeLeft = 60; // 1 minute
+        const timerElement = document.getElementById('timer');
+        const interval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                document.getElementById('payment-form').style.display = 'block';
+            }
+        }, 1000);
+    </script>
+</head>
+<body>
+    <h1>Complete Your Payment</h1>
+    <p>Order ID: {{ order.id }}</p>
+    <p>Total: ₹{{ order.total_amount }}</p>
+    {% if order.payment_method.name == 'upi' and order.payment_method.upi_qr_code %}
+        <h2>Scan QR Code</h2>
+        <img src="{{ order.payment_method.upi_qr_code.url }}" alt="UPI QR Code" width="200">
+    {% elif order.payment_method.name == 'bank' %}
+        <h2>Bank Transfer Details</h2>
+        <p>{{ order.payment_method.bank_details }}</p>
+    {% endif %}
+    <p>Time remaining: <span id="timer">60</span> seconds</p>
+    <div id="payment-form" style="display: none;">
+        <form method="post">
+            {% csrf_token %}
+            <p>Did you complete the payment?</p>
+            <button type="submit" name="paid" value="yes">Yes</button>
+            <button type="submit" name="paid" value="no">No</button>
+        </form>
+    </div>
+</body>
+</html>

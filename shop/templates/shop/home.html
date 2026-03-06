@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ company_name }} - Home</title>
+    {% load static %}
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        body{font-family: Arial, Helvetica, sans-serif;margin:0;padding:0;color:#222}
+        .banner{background:#f7c948;padding:18px 24px;display:flex;align-items:center;justify-content:space-between}
+        .banner .brand{font-size:28px;font-weight:700}
+        .container{display:flex;gap:16px;padding:16px}
+        .left{width:320px}
+        .right{flex:1}
+        .filters{background:#fff;border:1px solid #e6e6e6;padding:12px;border-radius:6px}
+        .filters input,.filters select{width:100%;padding:8px;margin:8px 0;border:1px solid #ddd;border-radius:4px}
+        .offers{background:#fff;padding:12px;margin-bottom:12px;border-radius:6px;border:1px solid #eee}
+        .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+        .card{background:#fff;border:1px solid #e8e8e8;border-radius:6px;padding:10px;display:flex;flex-direction:column;overflow:hidden}
+        .img-wrap{width:100%;height:220px;overflow:hidden;border-radius:4px}
+        .img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+        .price-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+        .orig{color:#888;text-decoration:line-through}
+        .offer{background:#ff6b6b;color:#fff;padding:2px 6px;border-radius:4px;font-size:12px}
+        .current{font-weight:700;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .add-btn{margin-top:10px;background:#007bff;color:#fff;border:none;padding:8px;border-radius:4px;cursor:pointer;text-align:center;text-decoration:none}
+        .footer-links{padding:16px;text-align:center;color:#666}
+        @media(max-width:900px){.container{flex-direction:column}.right{width:100%}}
+    </style>
+</head>
+<body>
+
+    <!-- Top company banner -->
+    <header class="banner" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+            {% if company_logo_url %}
+                <img src="{{ company_logo_url }}" alt="{{ company_name }} logo" style="width:56px;height:56px;object-fit:cover;border-radius:50%;border:2px solid rgba(0,0,0,0.06)">
+            {% else %}
+                <img src="{% static 'logo.svg' %}" alt="{{ company_name }} logo" style="width:56px;height:56px;object-fit:cover;border-radius:50%;border:2px solid rgba(0,0,0,0.06)">
+            {% endif %}
+            <div>
+                <div class="brand">{{ company_name }}</div>
+                <div style="font-size:12px;color:#444">{{ company_address }}</div>
+            </div>
+        </div>
+
+        <div style="text-align:right;font-size:14px">
+            <div>Email: <a href="mailto:{{ company_email }}">{{ company_email }}</a></div>
+            <div>Phone: <a href="tel:{{ company_phone }}">{{ company_phone }}</a></div>
+            <div style="margin-top:6px"><a href="https://wa.me/{{ whatsapp_number }}" target="_blank" style="background:#25D366;color:#fff;padding:6px 8px;border-radius:4px;text-decoration:none">WhatsApp Us</a></div>
+        </div>
+    </header>
+
+    <!-- Main area: left = products + festival offers, right = filter/search table -->
+    <main class="container">
+        <!-- Left: filters (user requested filters on left side) -->
+        <aside class="left">
+            <!-- Festival offer area (bottom of banner on left side in user description) -->
+                    <div class="filters">
+                        <form method="get">
+                            <label for="search"><strong>Search</strong></label>
+                            <input id="search" name="q" type="search" placeholder="Search products..." value="{{ request.GET.q }}">
+
+                            <label for="category"><strong>Category</strong></label>
+                            <select id="category" name="category">
+                                <option value="">All Categories</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+
+                            <label><strong>Price range</strong></label>
+                            <input name="min_price" type="number" placeholder="Min" value="{{ request.GET.min_price }}">
+                            <input name="max_price" type="number" placeholder="Max" value="{{ request.GET.max_price }}">
+
+                            <button type="submit" style="width:100%;background:#28a745;color:#fff;border:none;padding:10px;border-radius:4px;cursor:pointer">Apply</button>
+                        </form>
+                    </div>
+
+                    {% if offers %}
+                <div class="offers">
+                <h3>Festival Offers</h3>
+                {% for offer in offers %}
+                    <div style="margin-bottom:8px;">
+                        <strong>{{ offer.title }}</strong> — {{ offer.discount_percent }}% off
+                        {% if offer.banner_image %}
+                            <div style="margin-top:6px;"><img src="{{ offer.banner_image.url }}" alt="{{ offer.title }}" style="max-width:100%;height:120px;object-fit:cover;border-radius:4px"></div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        </aside>
+
+        <!-- Right: product grid -->
+        <section class="right">
+            <!-- Product grid -->
+            <div class="products">
+                {% for product in products %}
+                <div class="card">
+                    <a href="{% url 'product_detail' product.id %}" style="color:inherit;text-decoration:none">
+                        <div class="img-wrap">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <div style="width:100%;height:220px;background:#f2f2f2;display:flex;align-items:center;justify-content:center;color:#999">No Image</div>
+                        {% endif %}
+                        </div>
+                        <h4 style="margin:8px 0 4px;">{{ product.name }}</h4>
+                        <p style="margin:0;color:#555;font-size:13px">{{ product.short_description|default:product.description|truncatechars:80 }}</p>
+                    </a>
+                    <div class="price-row">
+                        <div class="orig">₹{{ product.original_price }}</div>
+                        {% if product.discount_percent %}
+                            <div class="offer">{{ product.discount_percent }}% OFF</div>
+                        {% endif %}
+                        <div class="current">₹{{ product.final_price }}</div>
+                    </div>
+                    <a class="add-btn" href="{% url 'add_to_cart' product.id %}">Add to Cart</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <div class="footer-links">© {{ now.year }} Namma Family — All rights reserved</div>
+
+</body>
+</html>

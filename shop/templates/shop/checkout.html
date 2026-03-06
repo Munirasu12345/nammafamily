@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Namma Family - Checkout</title>
+</head>
+<body>
+    <h1>Checkout</h1>
+    <h2>Order Summary</h2>
+    {% for item in items %}
+        <div>
+            {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="100">
+            {% endif %}
+            <h3>{{ item.product.name }}</h3>
+            {% if item.size %}
+                <p>Size: {{ item.size }}</p>
+            {% endif %}
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>Total: ₹{{ item.total }}</p>
+        </div>
+    {% endfor %}
+    <p><strong>Grand Total: ₹{{ total }}</strong></p>
+    <form method="post">
+        {% csrf_token %}
+        <label>Name: <input type="text" name="customer_name" required></label><br>
+        <label>Phone: <input type="text" name="phone" required></label><br>
+        <label>Address: <textarea name="address" required></textarea></label><br>
+        <label>Payment Method:
+            <select name="payment_method" required>
+                {% for method in payment_methods %}
+                    <option value="{{ method.id }}">{{ method }}</option>
+                {% endfor %}
+            </select>
+        </label><br>
+        <button type="submit">Place Order</button>
+    </form>
+    <a href="{% url 'cart' %}">Back to Cart</a>
+</body>
+</html>

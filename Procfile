@@ -1,1 +1,1 @@
-web: gunicorn nammafamily.wsgi
+gunicorn nammafamily.wsgi

@@ -134,7 +134,7 @@ DEFAULT_FROM_EMAIL = 'no-reply@nammafamily.local'
 COMPANY_NAME = 'Namma Family'
 COMPANY_EMAIL = 'hello@nammafamily.example'
 COMPANY_PHONE = '+919999999999'
-COMPANY_ADDRESS = '123 Market Road, City, State, PIN'
+#COMPANY_ADDRESS = '123 Market Road, City, State, PIN'
 # WhatsApp number in international format without + or dashes, e.g. 919999999999
 WHATSAPP_NUMBER = '919999999999'
 

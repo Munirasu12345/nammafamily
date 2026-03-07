@@ -18,7 +18,8 @@ SECRET_KEY = 'django-insecure-mtk#9ert_%s3$nc0j7^aholvq7jrvt+#b6cv$l@%puo!51k9w-
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+#ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ["nammafamily.onrender.com", "127.0.0.1", "localhost"]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',

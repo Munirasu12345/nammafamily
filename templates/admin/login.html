@@ -3,10 +3,12 @@
 
 {% block content %}
   <div id="content-main">
-    <h1>{{ title }}</h1>
+    <h1>{% trans "Login" %}</h1>
 
     {% if form.errors %}
-      <p class="errornote">{{ form.errors.as_text }}</p>
+      <p class="errornote">
+        {% trans "Please correct the error below." %}
+      </p>
     {% endif %}
 
     <form action="{% url 'admin:login' %}" method="post" id="login-form">
@@ -26,9 +28,7 @@
     </form>
 
     <p style="margin-top:12px;">
-      <a href="{% url 'admin_forgot_password' %}">Forgot password (shared-secret)?</a>
-      &nbsp;|&nbsp;
-      <a href="{% url 'admin_password_reset' %}">Forgot password (email)</a>
+      <a href="{% url 'password_reset' %}">{% trans "Forgot password?" %}</a>
     </p>
   </div>
 {% endblock %}

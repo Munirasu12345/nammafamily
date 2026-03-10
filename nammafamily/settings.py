@@ -10,27 +10,28 @@ from pathlib import Path
 # --------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # --------------------------------------------------
 # SECURITY
 # --------------------------------------------------
 SECRET_KEY = 'django-insecure-mtk#9ert_%s3$nc0j7^aholvq7jrvt+#b6cv$l@%puo!51k9w-'
-
 DEBUG = True
 
-#ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-ALLOWED_HOSTS = ['nammafamily.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'nammafamily.onrender.com']
 
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
+    'https://nammafamily.onrender.com',
 ]
-
 
 # --------------------------------------------------
 # APPLICATIONS
 # --------------------------------------------------
 INSTALLED_APPS = [
+    # Local apps first (so templates override admin)
+    'shop',
+
+    # Django contrib apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,11 +41,7 @@ INSTALLED_APPS = [
 
     # Third-party
     'rest_framework',
-
-    # Local apps
-    'shop',
 ]
-
 
 # --------------------------------------------------
 # MIDDLEWARE
@@ -57,8 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-
 
 # --------------------------------------------------
 # URL & TEMPLATES
@@ -68,8 +65,8 @@ ROOT_URLCONF = 'nammafamily.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # global templates
-        'APP_DIRS': True,
+        'DIRS': [BASE_DIR / "templates"],  # global templates folder
+        'APP_DIRS': True,                  # allows app-level templates
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -83,7 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'nammafamily.wsgi.application'
 
-
 # --------------------------------------------------
 # DATABASE
 # --------------------------------------------------
@@ -93,7 +89,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # --------------------------------------------------
 # PASSWORD VALIDATION
@@ -105,17 +100,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
 # --------------------------------------------------
 # INTERNATIONALIZATION
 # --------------------------------------------------
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
 USE_TZ = True
-
 
 # --------------------------------------------------
 # STATIC & MEDIA FILES
@@ -126,18 +117,20 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Development email backend: prints emails to the console. Replace with real SMTP config in production.
+# --------------------------------------------------
+# EMAIL (development only)
+# --------------------------------------------------
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'no-reply@nammafamily.local'
 
-# Company contact/config (customize these)
+# --------------------------------------------------
+# COMPANY INFO (custom)
+# --------------------------------------------------
 COMPANY_NAME = 'Namma Family'
 COMPANY_EMAIL = 'hello@nammafamily.example'
 COMPANY_PHONE = '+919999999999'
 COMPANY_ADDRESS = '123 Market Road, City, State, PIN'
-# WhatsApp number in international format without + or dashes, e.g. 919999999999
 WHATSAPP_NUMBER = '919999999999'
-
 
 # --------------------------------------------------
 # DEFAULT PRIMARY KEY

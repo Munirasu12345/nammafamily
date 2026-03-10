@@ -28,8 +28,9 @@ CSRF_TRUSTED_ORIGINS = [
 # APPLICATIONS
 # --------------------------------------------------
 INSTALLED_APPS = [
- Local apps first (so templates override admin)
+    # Local apps first (so templates override admin)
     'shop',
+    'myapp',  # if you added this new app
 
     # Django contrib apps
     'django.contrib.admin',
@@ -39,9 +40,24 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Third-party
+    # Third-party apps
     'rest_framework',
 ]
+#INSTALLED_APPS = [
+# Local apps first (so templates override admin)
+#    'shop',
+
+    # Django contrib apps
+#    'django.contrib.admin',
+#    'django.contrib.auth',
+#    'django.contrib.contenttypes',
+#    'django.contrib.sessions',
+#    'django.contrib.messages',
+#    'django.contrib.staticfiles',
+
+    # Third-party
+#    'rest_framework',
+#]
 
 # --------------------------------------------------
 # MIDDLEWARE

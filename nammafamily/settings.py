@@ -23,16 +23,16 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'nammafamily.onrender.com']
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
-    'https://nammafamily.onrender.com',
+    'https://nammafamily.onrender.com',  # ? must be https for Render
 ]
 
 # --------------------------------------------------
 # APPLICATIONS
 # --------------------------------------------------
 INSTALLED_APPS = [
-    # Local apps first (so templates override admin)
+    # Local apps
     'shop',
-    'myapp',  # if you added this new app
+    'myapp',
 
     # Django contrib apps
     'django.contrib.admin',
@@ -126,6 +126,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Whitenoise storage (recommended for Render)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Media files (user uploads like product images)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

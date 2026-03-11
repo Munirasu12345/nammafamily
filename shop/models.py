@@ -5,14 +5,14 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True, default='')
 
     def __str__(self):
         return self.name
 
 class Product(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=300)
     image = models.ImageField(upload_to='products/', blank=True)
     original_price = models.DecimalField(max_digits=10, decimal_places=2)
     discount_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0)
@@ -36,7 +36,7 @@ class Product(models.Model):
         return self.name
 
 class Offer(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=300)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     discount_percent = models.DecimalField(max_digits=5, decimal_places=2)
@@ -56,7 +56,7 @@ class PaymentMethod(models.Model):
         ('upi', 'UPI'),
         ('bank', 'Bank Transfer'),
     ]
-    name = models.CharField(max_length=50, choices=PAYMENT_TYPES, unique=True)
+    name = models.CharField(max_length=60, choices=PAYMENT_TYPES, unique=True)
     enabled = models.BooleanField(default=True)
     upi_qr_code = models.ImageField(upload_to='payments/', blank=True, null=True)
     bank_details = models.TextField(blank=True)
@@ -75,8 +75,8 @@ class Order(models.Model):
         ('Cancelled', 'Cancelled'),
     )
 
-    customer_name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=15)
+    customer_name = models.CharField(max_length=200)
+    phone = models.CharField(max_length=25)
     address = models.TextField()
 
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)

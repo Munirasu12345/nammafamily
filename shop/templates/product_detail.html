@@ -2,21 +2,30 @@
 <html>
 <head>
     <title>{{ product.name }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
-<h2>{{ product.name }}</h2>
+<div class="product-detail">
+    <h2>{{ product.name }}</h2>
 
-<img src="{{ product.image.url }}" width="300"><br><br>
+    <div class="product-content">
+        <div class="product-image">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        </div>
+        <div class="product-info">
+            <p class="price">
+                <del>₹{{ product.original_price }}</del><br>
+                <strong>₹{{ product.final_price }}</strong><br>
+                {{ product.discount_percent }}% OFF
+            </p>
+            <p class="description">{{ product.description }}</p>
+        </div>
+    </div>
 
-<p>
-    <del>₹{{ product.original_price }}</del><br>
-    <strong>₹{{ product.final_price }}</strong><br>
-    <p>{{ product.description }}</p>
-    {{ product.discount_percent }}% OFF
-</p>
-
-<a href="/">Back to Home</a>
+    <a href="/" class="back-link">Back to Home</a>
+</div>
 
 </body>
 </html>

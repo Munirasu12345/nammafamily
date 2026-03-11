@@ -146,6 +146,12 @@ COMPANY_ADDRESS = '123 Market Road, City, State, PIN'
 WHATSAPP_NUMBER = '919999999999'
 
 # --------------------------------------------------
+# COOKIE SECURITY
+# --------------------------------------------------
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# --------------------------------------------------
 # DEFAULT PRIMARY KEY
 # --------------------------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
